@@ -9,9 +9,9 @@
       src: url('SFMonoMedium.otf') format('opentype');
     }
 
-    body {
+    html, body {
       font-family: 'SFMonoMedium', monospace;
-      background: white;
+      background: transparent; /* changed from white to transparent */
       margin: 0;
       padding: 40px;
     }
@@ -19,16 +19,14 @@
     .progress-container {
       position: relative;
       width: 100%;
-      max-width: none;
     }
 
     .progress-bar-bg {
       position: absolute;
       top: 0%;
-      left: 5%;
+      left: 0;
       right: 0;
       height: 4px;
-      width: 75%;
       background-color: #C6C6C6;
       transform: translateY(-50%);
       z-index: 1;
@@ -37,7 +35,7 @@
     .progress-bar-active {
       position: absolute;
       top: 0%;
-      left: 7%;
+      left: 0;
       height: 4px;
       background-color: #000000;
       transform: translateY(-50%);
@@ -50,9 +48,9 @@
       justify-content: space-between;
       position: relative;
       z-index: 3;
-      width: 75%;
-      margin-left: 4.5%;
-      padding-bottom: 40px; /* adjusted from 60px to match top */
+      width: 100%; /* changed from 75% */
+      margin-left: 0; /* removed 4.5% margin */
+      padding-bottom: 40px;
     }
 
     .stage {
@@ -178,7 +176,7 @@
       stage.onmouseout = () => img.src = (i <= activeIndex) ? icons[i].active : icons[i].inactive;
     });
 
-    const barTotalWidth = 70;
+    const barTotalWidth = 100;
     const stepPercent = barTotalWidth / 3;
     const activeWidth = stepPercent * (activeIndex - 1);
     progressBar.style.width = `${activeWidth}%`;
@@ -206,4 +204,3 @@
 </script>
 </body>
 </html>
-
