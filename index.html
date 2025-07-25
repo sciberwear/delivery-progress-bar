@@ -134,74 +134,77 @@
     </div>
   </div>
 
-  <script>
-    const stages = document.querySelectorAll('.stage');
-    const progressBar = document.getElementById('progress-active');
+<script>
+  const stages = document.querySelectorAll('.stage');
+  const progressBar = document.getElementById('progress-active');
 
-    const icons = {
-      1: {
-        active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_active.svg',
-        inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_inactive.svg',
-        hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_inv.svg'
-      },
-      2: {
-        active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_active.svg',
-        inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_inactive.svg',
-        hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_inv.svg'
-      },
-      3: {
-        active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_active.svg',
-        inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_inactive.svg',
-        hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_inv.svg'
-      },
-      4: {
-        active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_active.svg',
-        inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_inactive.svg',
-        hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_inv.svg'
-      }
-    };
-
-    function setStage(activeIndex) {
-      stages.forEach((stage, index) => {
-        const img = stage.querySelector('img');
-        const text = stage.querySelector('.stage-text');
-        const i = index + 1;
-
-        if (i <= activeIndex) {
-          stage.classList.add('active');
-          img.src = icons[i].active;
-          text.style.color = '#000000';
-        } else {
-          stage.classList.remove('active');
-          img.src = icons[i].inactive;
-          text.style.color = '#C6C6C6';
-        }
-
-        stage.onmouseover = () => img.src = icons[i].hover;
-        stage.onmouseout = () => img.src = (i <= activeIndex) ? icons[i].active : icons[i].inactive;
-      });
-
-      const barTotalWidth = 70;
-      const stepPercent = barTotalWidth / 3;
-      const activeWidth = stepPercent * (activeIndex - 1);
-      progressBar.style.width = `${activeWidth}%`;
+  const icons = {
+    1: {
+      active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_active.svg',
+      inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_inactive.svg',
+      hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/order-icon_inv.svg'
+    },
+    2: {
+      active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_active.svg',
+      inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_inactive.svg',
+      hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/garment-icon_inv.svg'
+    },
+    3: {
+      active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_active.svg',
+      inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_inactive.svg',
+      hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/delivery-icon_inv.svg'
+    },
+    4: {
+      active: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_active.svg',
+      inactive: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_inactive.svg',
+      hover: 'https://raw.githubusercontent.com/sciberwear/assets/refs/heads/main/delivery/home-icon_inv.svg'
     }
+  };
 
-    setStage(1);
+  function setStage(activeIndex) {
+    stages.forEach((stage, index) => {
+      const img = stage.querySelector('img');
+      const text = stage.querySelector('.stage-text');
+      const i = index + 1;
 
-    stages.forEach(stage => {
-      stage.addEventListener('click', () => {
-        const level = parseInt(stage.getAttribute('data-stage'), 10);
-        setStage(level);
-        parent.postMessage({ type: 'stageClicked', value: level }, '*');
-      });
-    });
-
-    window.addEventListener('message', (event) => {
-      if (event.data?.type === 'setStage') {
-        setStage(event.data.value);
+      if (i <= activeIndex) {
+        stage.classList.add('active');
+        img.src = icons[i].active;
+        text.style.color = '#000000';
+      } else {
+        stage.classList.remove('active');
+        img.src = icons[i].inactive;
+        text.style.color = '#C6C6C6';
       }
+
+      stage.onmouseover = () => img.src = icons[i].hover;
+      stage.onmouseout = () => img.src = (i <= activeIndex) ? icons[i].active : icons[i].inactive;
     });
-  </script>
+
+    const barTotalWidth = 70;
+    const stepPercent = barTotalWidth / 3;
+    const activeWidth = stepPercent * (activeIndex - 1);
+    progressBar.style.width = `${activeWidth}%`;
+  }
+
+  // Start at stage 1
+  setStage(1);
+
+  // When a stage is clicked in iframe, notify parent
+  stages.forEach(stage => {
+    stage.addEventListener('click', () => {
+      const level = parseInt(stage.getAttribute('data-stage'), 10);
+      setStage(level);
+      parent.postMessage({ type: 'stageClicked', value: level }, '*');
+    });
+  });
+
+  // When parent tells iframe to update stage
+  window.addEventListener('message', (event) => {
+    if (event.data?.type === 'setStage') {
+      setStage(event.data.value);
+    }
+  });
+</script>
 </body>
 </html>
