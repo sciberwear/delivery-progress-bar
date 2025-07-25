@@ -187,10 +187,10 @@
     progressBar.style.width = `${activeWidth}%`;
   }
 
-  // Start at stage 1
+  // Initial state
   setStage(1);
 
-  // When a stage is clicked in iframe, notify parent
+  // Click handler
   stages.forEach(stage => {
     stage.addEventListener('click', () => {
       const level = parseInt(stage.getAttribute('data-stage'), 10);
@@ -199,8 +199,9 @@
     });
   });
 
-  // When parent tells iframe to update stage
+  // Message listener
   window.addEventListener('message', (event) => {
+    console.log("Received message in iframe:", event.data);
     if (event.data?.type === 'setStage') {
       setStage(event.data.value);
     }
